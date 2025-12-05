@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam & Sons Plumbers - Somerset's Emergency Plumbers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #f5f4f2;
+            --text-primary: #1a1a1a;
+            --accent: #9a3412;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 249, 247, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            transform: translateY(-100%);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav.visible {
+            transform: translateY(0);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-phone {
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 4rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(154,52,18,0.3)), 
+                        url('https://images.unsplash.com/photo-1599463698367-11cb72775b67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4MzgyMjB8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwbHVtYmVyJTIwd29ya2luZyUyMG1vZGVybnxlbnwwfDB8fHwxNzY0OTAyNzk2fDA&ixlib=rb-4.1.0&q=80&w=1080') center/cover;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(4rem, 12vw, 10rem);
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1.5s ease forwards 0.5s;
+        }
+
+        .hero-tagline {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s ease forwards 1s;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards 1.5s, bounce 2s infinite 2.5s;
+        }
+
+        .scroll-indicator::after {
+            content: '↓';
+            font-size: 2rem;
+            color: white;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .hook {
+            background: var(--bg-secondary);
+            text-align: center;
+        }
+
+        .hook-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hook-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hook-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-light);
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+        }
+
+        .hook-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .story {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .story-text {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .story-text.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+
+        .story-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .story-highlight {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--accent);
+            border-left: 4px solid var(--accent);
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 600px;
+            background: url('https://images.unsplash.com/photo-1599463698367-11cb72775b67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4MzgyMjB8MHwxfHNlYXJjaHwxfHxwbHVtYmVyJTIwZml4aW5nJTIwc2lua3xlbnwwfDB8fHwxNzY0OTAyNzk2fDA&ixlib=rb-4.1.0&q=80&w=1080') center/cover;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+        }
+
+        .story-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .services {
+            background: var(--bg-secondary);
+        }
+
+        .services-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--accent);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .service-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-card:nth-child(2) { transition-delay: 0.1s; }
+        .service-card:nth-child(3) { transition-delay: 0.2s; }
+        .service-card:nth-child(4) { transition-delay: 0.3s; }
+        .service-card:nth-child(5) { transition-delay: 0.4s; }
+
+        .service-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .service-description {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat:nth-child(2) { transition-delay: 0.1s; }
+        .stat:nth-child(3) { transition-delay: 0.2s; }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .testimonials {
+            background: var(--text-primary);
+            color: white;
+            text-align: center;
+        }
+
+        .testimonial {
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .testimonial.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .testimonial-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            line-height: 1.4;
+            font-style: italic;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .testimonial-quote::before {
+            content: '"';
+            font-size: 8rem;
+            color: var(--accent);
+            position: absolute;
+            top: -2rem;
+            left: -2rem;
+            opacity: 0.3;
+        }
+
+        .testimonial-author {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: var(--accent);
+        }
+
+        .contact {
+            background: var(--bg-secondary);
+            text-align: center;
+        }
+
+        .contact-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+
+        .contact-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: white;
+            padding: 1.5rem 3rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #7c2d12;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .form-status.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .form-status.error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            line-height: 1.8;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .story {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .story-image {
+                height: 400px;
+            }
+
+            .nav-content {
+                padding: 0 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .testimonial-quote::before {
+                font-size: 4rem;
+                top: -1rem;
+                left: -1rem;
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">Adam & Sons</a>
+            <a href="tel:6317108938" class="nav-phone">(631) 710-8938</a>
+        </div>
+    </nav>
+
+    <section class="section hero">
+        <div class="container">
+            <h1 class="hero-title">Adam & Sons<br>Plumbers</h1>
+            <p class="hero-tagline">Somerset's Emergency Plumbers - Here in 30 Minutes</p>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <section class="section hook">
+        <div class="container">
+            <h2 class="hook-text reveal">Tired of plumbers<br>who never show?</h2>
+            <p class="hook-subtitle reveal">Water damage waits for no one. Neither should you.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="story">
+                <div class="story-text reveal">
+                    <h2 class="story-title">Three Generations of Trust</h2>
+                    <p class="story-description">
+                        Since 1987, three generations of the Adam family have been Somerset's go-to plumbing experts. 
+                        What started as a father-son operation has grown into Somerset's most trusted emergency plumbing service, 
+                        but we've never lost sight of what matters most: showing up when you need us.
+                    </p>
+                    <blockquote class="story-highlight">
+                        "20 years in business taught us that trust isn't just about fixing pipes—it's about being there when disaster strikes at 11 PM on a Sunday."
+                    </blockquote>
+                    <p class="story-description">
+                        Licensed, insured, and backed by our 100% satisfaction guarantee, we believe in upfront pricing with no hidden fees. 
+                        Because when your home is flooding, the last thing you need is a surprise on your bill.
+                    </p>
+                </div>
+                <div class="story-image reveal"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section services">
+        <div class="container">
+            <h2 class="services-title reveal">How We Solve Your Problems</h2>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <h3 class="service-title">24/7 Emergency Repairs</h3>
+                    <p class="service-description">Stop water damage before it ruins your home. Our emergency team arrives within 30 minutes, equipped to handle burst pipes, flooding, and urgent leaks that can't wait until morning.</p>
+                </div>
+                <div class="service-card reveal">
+                    <h3 class="service-title">Drain Cleaning & Unclogging</h3>
+                    <p class="service-description">Clear stubborn blockages without damaging pipes. Using advanced camera inspections and professional-grade equipment, we restore your drains to full flow safely and efficiently.</p>
+                </div>
+                <div class="service-card reveal">
+                    <h3 class="service-title">Water Heater Services</h3>
+                    <p class="service-description">Restore hot water fast with energy-efficient solutions. From emergency repairs to complete installations, we'll have you back to comfortable showers and clean dishes in no time.</p>
+                </div>
+                <div class="service-card reveal">
+                    <h3 class="service-title">Bathroom & Kitchen Remodeling</h3>
+                    <p class="service-description">Transform your space with modern, leak-proof plumbing. Our precision installations ensure your beautiful new fixtures function flawlessly for years to come.</p>
+                </div>
+                <div class="service-card reveal">
+                    <h3 class="service-title">Sewer Line Services</h3>
+                    <p class="service-description">Prevent costly backups with camera inspections and trenchless repairs. We diagnose sewer problems accurately and fix them with minimal disruption to your property.</p>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat reveal">
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Years in Business</div>
+                </div>
+                <div class="stat reveal">
+                    <div class="stat-number">30</div>
+                    <div class="stat-label">Minutes Response Time</div>
+                </div>
+                <div class="stat reveal">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Satisfaction Guarantee</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section testimonials">
+        <div class="container">
+            <div class="testimonial reveal" id="testimonial1">
+                <p class="testimonial-quote">My kitchen flooded at 11 PM on a Sunday and Adam & Sons was here within 25 minutes! They fixed the burst pipe under my sink and even helped move my wet boxes to safety. The price was exactly what they quoted over the phone - no surprise charges.</p>
+                <p class="testimonial-author">— Maria Rodriguez</p>
+            </div>
+            <div class="testimonial-dots">
+                <div class="dot active" onclick="showTestimonial(0)"></div>
+                <div class="dot" onclick="showTestimonial(1)"></div>
+                <div class="dot" onclick="showTestimonial(2)"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section contact">
+        <div class="container">
+            <h2 class="contact-title reveal">Ready to Experience the Difference?</h2>
+            <p class="contact-subtitle reveal">Don't wait for a plumbing emergency. Get in touch today for same-day service you can trust.</p>
+            
+            <form id="contactForm" class="contact-form reveal">
+                <input type="hidden" name="websiteId" value="78881fced4762ef60578954e65e47d2d">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="phone" placeholder="Your Phone">
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Describe your plumbing issue or project..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Get Free Quote</button>
+                <div id="formStatus" class="form-status"></div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>155 Hamilton Street<br>Somerset</p>
+                <p><a href="tel:6317108938">(631) 710-8938</a></p>
+                <p><a href="mailto:ralph_farah_2001@hotmail.com">ralph_farah_2001@hotmail.com</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Emergency Service</h3>
+                <p>Available 24/7 for urgent repairs</p>
+                <p>30-minute response time guaranteed</p>
+                <p>Licensed & Insured</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Adam & Sons Plumbers. All rights reserved. | 20 Years of Excellence in Somerset</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation scroll reveal
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('visible');
+            } else {
+                nav.classList.remove('visible');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Testimonials rotation
+        const testimonials = [
+            {
+                quote: "My kitchen flooded at 11 PM on a Sunday and Adam & Sons was here within 25 minutes! They fixed the burst pipe under my sink and even helped move my wet boxes to safety. The price was exactly what they quoted over the phone - no surprise charges.",
+                author: "— Maria Rodriguez"
+            },
+            {
+                quote: "I was worried about the cost of replacing my 15-year-old water heater, but Mike from Adam & Sons showed me how a new energy-efficient model would actually save me money. The installation was clean, fast, and they hauled away the old unit for free. Best investment I've made in years.",
+                author: "— Robert Chen"
+            },
+            {
+                quote: "After three other plumbers couldn't figure out why our shower had no pressure, Adam & Sons diagnosed the problem in 10 minutes and fixed it that same day. Their technician was incredibly professional and explained everything clearly. Finally found our go-to plumber in Somerset!",
+                author: "— Jennifer Walsh"
+            }
+        ];
+
+        let currentTestimonial = 0;
+
+        function showTestimonial(index) {
+            const testimonialEl = document.querySelector('.testimonial');
+            const dots = document.querySelectorAll('.dot');
+            
+            // Update dots
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            // Update testimonial content
+            testimonialEl.querySelector('.testimonial-quote').textContent = testimonials[index].quote;
+            testimonialEl.querySelector('.testimonial-author').textContent = testimonials[index].author;
+            
+            currentTestimonial = index;
+        }
+
+        // Auto-rotate testimonials
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(currentTestimonial);
+        }, 8000);
+
+        // Contact form handling
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const status = document.getElementById('formStatus');
+            const originalText = btn.textContent;
+            
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            
+            try {
+                const response = await fetch('https://no-website-finder.onrender.com/api/form-submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        websiteId: this.querySelector('[name="websiteId"]').value,
+                        name: this.querySelector('[name="name"]').value,
+                        email: this.querySelector('[name="email"]').value,
+                        phone: this.querySelector('[name="phone"]').value || '',
+                        message: this.querySelector('[name="message"]').value
+                    })
+                });
+                
+                const data = await response.json();
+                status.textContent = data.success ? '✓ Message sent successfully! We\'ll call you within 30 minutes.' : '✗ Something went wrong. Please call us directly.';
+                status.className = 'form-status ' + (data.success ? 'success' : 'error');
+                
+                if (data.success) this.reset();
+            } catch (err) {
+                status.textContent = '✗ Failed to send message. Please call us directly at (631) 710-8938';
+                status.className = 'form-status error';
+            }
+            
+            btn.disabled = false;
+            btn.textContent = originalText;
+        });
+
+        // Counter animation for stats
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = counter.textContent.includes('+') ? 
+                        parseInt(counter.textContent.replace('+', '')) : 
+                        counter.textContent.includes('%') ?
+                        parseInt(counter.textContent.replace('%', '')) :
+                        parseInt(counter.textContent);
+                    
+                    const count = +counter.getAttribute('data-count') || 0;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.setAttribute('data-count', Math.ceil(count + inc));
+                        const suffix = counter.textContent.includes('+') ? '+' : 
+                                     counter.textContent.includes('%') ? '%' : '';
+                        counter.textContent = Math.ceil(count + inc) + suffix;
+                        setTimeout(updateCount, 1);
+                    } else {
+                        const suffix = counter.textContent.includes('+') ? '+' : 
+                                     counter.textContent.includes('%') ? '%' : '';
+                        counter.textContent = target + suffix;
+                    }
+                };
+
+                updateCount();
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
